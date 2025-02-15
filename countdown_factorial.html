@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer & Factorial Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        input, button {
+            margin: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        p {
+            font-size: 18px;
+            font-weight: bold;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Countdown Timer</h1>
+        <input type="datetime-local" id="countdownInput">
+        <button onclick="startCountdown()">Start Countdown</button>
+        <p id="countdownDisplay"></p>
+        
+        <h1>Factorial Calculator</h1>
+        <input type="number" id="factorialInput" placeholder="Enter a number">
+        <button onclick="calculateFactorial('iterative')">Iterative Factorial</button>
+        <button onclick="calculateFactorial('recursive')">Recursive Factorial</button>
+        <p id="factorialResult"></p>
+    </div>
+    
+    <script>
+        function startCountdown() {
+            const input = document.getElementById('countdownInput').value;
+            const countdownDisplay = document.getElementById('countdownDisplay');
+            const targetTime = new Date(input).getTime();
+
+            if (isNaN(targetTime)) {
+                countdownDisplay.textContent = "Please select a valid date and time.";
+                return;
+            }
+
+            const interval = setInterval(() => {
+                const now = new Date().getTime();
+                const timeLeft = targetTime - now;
+
+                if (timeLeft <= 0) {
+                    clearInterval(interval);
+                    countdownDisplay.textContent = "Time's up!";
+                } else {
+                    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                    countdownDisplay.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+                }
+            }, 1000);
+        }
+
+        function calculateFactorial(method) {
+            const input = document.getElementById('factorialInput').value;
+            const resultDisplay = document.getElementById('factorialResult');
+            const num = parseInt(input);
+
+            if (isNaN(num) || num < 0) {
+                resultDisplay.textContent = "Please enter a valid positive integer.";
+                return;
+            }
+
+            function iterativeFactorial(n) {
+                let result = 1;
+                for (let i = 2; i <= n; i++) {
+                    result *= i;
+                }
+                return result;
+            }
+
+            function recursiveFactorial(n) {
+                return n <= 1 ? 1 : n * recursiveFactorial(n - 1);
+            }
+
+            const factorial = method === 'iterative' ? iterativeFactorial(num) : recursiveFactorial(num);
+            resultDisplay.textContent = `Factorial (${method}): ${factorial}`;
+        }
+    </script>
+</body>
+</html>
